@@ -1,0 +1,103 @@
+- Begriffe, Herleitungen, Verfahren:
+
+- herleiten bayesche EntschRegel
+- Diskriminatenfktnen
+- Entsch.Grenzen angeben ?!
+- Thema: Normalverteilung
+- Kernel-Methoden
+- Warum Paramterschätzung?
+- HMM:
+  - Lösungsalgorithmen
+  - was ist viterbi?
+  - Markovsche Eigenschaft
+
+- Classifiere Performance Estimation:
+  - Holdout
+  - true/expected error
+  - Bayessche
+  - Bootstrap
+  - mc nemer test
+  - paited test
+  - ROC-Kurve (besser? Diagonale 50:50?)
+  - Optimal rejekt threshold
+
+- Rejection
+- Konfidenzmaße
+- Chows reject Option?
+
+-----------------
+
+- Was ist eine Metrik?
+
+- Eigenschaften einer Metrik?
+
+- Wie bekommt man aus einer Norm eine Metrik?
+
+- Beispiele zu einer Norm?
+
+- Euklidische Norm ist spez. Fall von was?
+
+- Metriken, die nicht von einer Norm kommen?
+
+- Welche Norm kommt von Skalarprodukt? p?
+
+- Methoden, um Features zu Normalisieren?
+
+fester Wertebereich
+feste Varianz (=1)
+
+- Beispiel Normierung eines Features?
+
+z.B. so dass alles cm statt mm ist oder von 0-1 wobei
+1 entspricht dem größten und 0 dem kleinsten Wert.
+
+Nutzung inversen Streumatrix, um Streuung auf 1 zu normieren.
+
+- Melankovski Distanz ?
+
+- Wie macht man es, dass mittelwert = 0 wird?
+
+- Was ist kNN Verfahren?
+
+- Was ist die kNN-Entscheidungsregel?
+
+- def 4.1 Erkläre Entscheidungsregel!
+
+- kNN Dichteschätzer und Bayersche Entsch.Regel: 4.2.1
+  -> Dichteschätzer ist nicht Wkeit-Dichte!
+
+- Nenne Verfahren der Feature-Selektion!
+
+- Was sind Filtermethoden?
+
+- Was sind Wrappermethoden?
+
+- Was ist "Classifier Performance"?
+
+- Suchstrategien, um Feature aus zu wählen? (Beste Suchen)
+ -> bei 3 Klassen NP-vollständig...
+
+ -> Greedy-Algorithmen (einen erklähren können)
+
+- was gibt es für Gütekriteren bei Klassen-Seperation?
+
+Streumatrizen, Skatter within/Between erklären
+
+- Wo kommt Streu und Kovarianzmatrix noch vor?
+
+Normierung
+
+- Was ist Principal Component Analyse? Was sucht man da?
+
+Eigenvektor des größten Eigenwerts der Streumatrix
+
+- Wie werden neue Featurewerte daraus berechnet?
+
+Skalarprodukt ...
+
+- Was ist kMeans ?
+- kMeans algorithmus?
+- kmeans: welches Güte-Kriterium?
+
+- Wie geht Hiearisches Clustering?
+- Wie geht graph.. Clustering?
