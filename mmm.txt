@@ -1,0 +1,971 @@
+Classifier
+==========
+
+1. diskriminatorischer Ansatz
+-----------------------------
+
+* class ist Teilregion des Featurespace
+
+
+2. probabilistischer Ansatz
+---------------------------
+
+* class und feature ist P zugeordnet
+
+* allg. als diskr. Ansatz
+
+
+3. Features
+-----------
+
+* Testdaten
+
+* Trainingsdaten
+
+* Extraktion
+
+
+4. Modell auf Tr.Data: Verallgemeinerung
+----------------------------------------
+
+5. Modell schwer bei Overfitting
+--------------------------------
+
+6. Vergleich von 2 (A und B)
+----------------------------
+
+* Naiv
+  - Fehlerrate bei GLEICHEN Testdaten messen
+  - Unterschied der Fehlerate könnte auch an zufälliger Verteilung der Testdaten
+liegen
+  - je Testdaten könnte Unterschied auch bei 2 identischen Classifieren auftreten
+
+
+* Nutzung Signifikanzniveau: ähnlich Konfidenzniveau
+
+* Testdaten unab. zuf. gewählt
+  - A(xi) und A(xj) unabhängig
+  - A(xi) und B(xi) NICHT unabhängig, weil beide mit selben Testsample gemessen
+werden müssen
+  - McNemar Test
+    - Fehlerratenvergleich
+    - Betrachtet werden nur die Anzahl der Fehlklassifizierungen, wo A richtig und B
+falsch (n01) liegt bzw. umgekehert (n10)
+    - Wenn beide gleich gut, sollte in etwa gelten: n10 = n01 =( n10+n01) / 2
+    - Shi² = Maß des Unterschieds der Fehler = ( l n10 - n01 l -1)² / (n10+n01)
+    - Shi(m)²_(1-alpha) = 3,8415 mit Signifikanzniveau alpha=0.05, dem (1 -
+0.05)-Quantil und m=1 als Anz. der Freiheitsgrade
+    - Beispiel: ist Shi² > 3.8415, dann ist Wkeit für rein statische Abweichung der
+Fehlerraten < 5%
+
+  - Paired t-Test
+    - Vergleich stetiger Performancemaße (nicht eindeutig Richtig/Falsch)
+    - Differenz D der Performace je Sample i wird betrachtet: Di = A(xi) - B(xi)
+    - Betrachte Teststatistik zu Zuf.Variable D: T=(Dquer * wurz(n) )/s(D)
+      - Dquer = Mittelwert aller i=1..n Di
+      - s²(D) = (n-1)^-1 * Sum (Di -Dquer)²
+      - Gleiche Performance wäre: E(D)=0
+
+    - signifikant untersch. Performance, wenn Betrag von T > t(n-1)_(1-alpha/2)
+    - t(n-1)_(1-alpha/2) ist das (1-alpha/2) Quantil der t-Verteilung mit n-1
+Freiheitsgraden
+      - Mit steigenden Freiheitsgrad (mehr Messwerte) nähert sich Quantil dem der Std.NV
+      - Quantil der Std. NV ist immer kleiner oder gleich
+
+
+7. Receiver Operation Characteristic (ROC)
+------------------------------------------
+
+* Vergleich von Classifier, die Samples nur 2 Klassen zuordnen
+
+* Classifier unterscheiden sich von nur 1 Parameter (Z.B. k in kNN oder ein
+Schwellwert für Entscheidung)
+
+* ROC-Kurve
+  - jeder Punkt stammt von einem anderen Parameter
+  - AUC: Area Under Curve: je größer die Fläche, desto besser der Classifier
+  - x-Achse: epsilon2 = Rate der Falsch als Klasse w2 Zugeordneten
+  - y-Achse: 1-epsilon1 ist Rate, der korr. w1 Zugeordneten
+
+
+* bester Parameter?
+  - Nutzung von Kosten bei Fehlklassifizierung
+  - geringste Kosten (Minimum) sind da, wo Steigung P(w2)/P(w1) ist
+  - Kostengrade am weitesten von "teurer" Diagonale entfernt, ab tangiert trotzdem
+noch ROC-Kurve
+
+Metrische Räume
+===============
+
+1. Metrik d auf M bildet M x M -> R ab
+--------------------------------------
+
+* d(x,y) = 0 <=> x = y
+
+* Symetrie: Abstand von x nach y ist gleich wie von y nach x
+
+* Dreiecksungleichung: Ein Umweg könnte länger sein!
+
+
+2. falls Menge Vektorraum
+-------------------------
+
+* V x V -> R ist Skalarprodukt, wenn
+  - bilinear: <x+a,y> = <a,y> + <a,y> und <cx,y>=c<x,y>
+  - symetrisch: <x,y> = <y,x>
+  - positiv: <x,x> >0 (wenn x!=0)
+
+
+* Skalarprodukt kann Norm definieren: llxll = wurzel(<x,x>)
+
+* eine Norm kann eine Metrik definieren: d(x,y) = ll x-y ll
+
+* allg. R^n Skalarprodukt: <x,y> = vek.x.Transponiert * A * vek.y
+
+
+3. Metrik Beispiele
+-------------------
+
+* triviale Metrik: d(x,y) ist 0 wenn x=y sonst 1
+
+* Euklidische Metrik: d(x,y) = sqrt(sum(xi - yi)²)
+
+* Levensthein Distance: d(x,y) = minimale Anz. Edit-OP um aus x das Wort y zu
+machen
+
+
+4. Norm
+-------
+
+* Abbildung eines Elements aus Vektorraum V über R
+
+* N1: llcxll = lcl * llxll
+
+* N2: llx+yll <= llxll + llyll
+
+* N3: llxll = 0 <=> x ist Nullvektor
+
+* Lp-Norm oder Minkowski-Norm
+  - euklid p=2
+  - Manhatten p=1
+  - Maximumsnorm: p -> inf
+  - p-te Wurzel aus Summe der Beträge aller (xi)^p
+
+
+5. Parallelogramm-Gleichung
+---------------------------
+
+* ll x+y ll² + ll x-y ll² = 2 llxll² + 2 llyll²
+
+* dann gilt: Norm stammt von Skalarprodukt
+
+* <x,y> = 1/4 ( ll x+y ll² - ll x-y ll² )
+
+
+6. Nutzung Freiheit des SkProd. (A) für Anpassung Metrik
+--------------------------------------------------------
+
+* Diagonalmatrix mit >=0 Werten -> Feature Weighting
+
+* cm oder Meter: Feature Normalization
+
+* feste Varianz: je Feature auf 1 normiert wi = 1/(si)^p
+  - A=Inv(sigma) Inverse der Kovarianzmatrix bei unab. Features
+  - Metrix: MAHALAnobis Distanz
+
+
+* Normierung auf Mittelwerte = 0 ist nur Verscheibung: beeinflusst nicht Abstand
+
+HMM
+===
+
+1. allgemein
+------------
+
+* durchläuft Folge von Class
+
+* Sprache: Folge von Phonemen
+
+* Schrift: t = Schreibrichtung
+
+* Gebärde: Folge von Handpos.
+
+* Wkeit für Folgen berechnen: Markov-Ketten
+
+
+2. Begriffe HMM
+---------------
+
+* wi = Hidden States
+
+* vi (i=1..S) Visible States
+
+* aij = Wkeiten der Hidden States
+
+* bjk = Wkeit, dass im State wj der Wert vk emittiert wird
+
+
+3. HMM Evaluation
+-----------------
+
+* Anwendung
+  - aij,bjk, Startzustand w(0) gegeben
+  - Wkeit für generierung der Folge: v(1)...v(T)
+
+
+* Naiv: leider O(T * C^T)
+
+* FORWARD-Algorithmus
+  - Mit Startwerten wird Wkeit berechnet für v(1) für C viele Hidden States
+  - iterativ: für t+1 wird wieder je C aus (Summe der bisherigen Wkeiten der Hidden
+States) * bjk die Wkeit für v(t+1) berechnet.
+  - Wegen Nutzung vorheriger Berechungen: O(T*C²)
+
+
+4. aij und bjk ? (j,k Laufindex für C,S)
+----------------------------------------
+
+5. HMM Dekodierung
+------------------
+
+* Anwendung
+  - aij,bjk gegeben sowie eine Folge v(1)..v(T)
+  - Was wahrscheinlichste Folge w(1)..w(T) die zu Beobachtung v führt?
+
+
+* Naiv: Brute-Force alle w(1)..w(T) durchprobieren O(C^T)
+
+* VITERBI-Algorithmus
+  - Prinzip ähnlich wie Forward-Algorithmus
+  - statt Aufsummierung der Wkeiten wird nun bisher Max ÜbergangsWkeiten
+abgespeichert (Produkt max(letzte WKeit)*Übergang jetzt)
+  - am Ende via Backtracking die Indizes der Classes des zuletzt Max. Pfades
+auflisten
+  - Wegen Nutzung vorheriger Berechungen: O(T*C²)
+
+
+6. HMM Training/Learning Problem
+--------------------------------
+
+* Anwendung
+  - Anzahl(=C) der w und Anzahl(=S) der v
+  - Auch gegeben: Trainingsdaten mit mehreren beobachteten Folgen v(1)..v(T)
+  - Wahrsch. Parameter aij, bjk ?
+  - P(w(1) = wi) also Wkeit der HiddenStates zu begin ??
+
+
+* Naiv: Maximum-Likelihood und Parameterschätzung
+  - liefert keine lösbar analytische Formel
+  - liefert keinen bekannten algorithmischen Lösungsweg
+
+
+* Algorithmus
+  - Numerisch/Iterativ
+  - Irgendwelche Anfangswerte nehmen
+  - Dekodierung der Trainingsdaten (Ermittlung Wahrsch. Hiddenstate-Folge)
+  - Schätze Parameter neu: aij=(Anz. Übergänge wi -> wj)/(Anzahl Vorkommen wi)
+  - Wiederhole Dek. bis irgendein Konvergenzkrit. erfüllt ist
+
+
+7. in der PRAXIS
+----------------
+
+* left-right Modell
+  - wi -> wj nur, wenn j>= i
+  - Wenn Buchstabe "e" mehrfach im Wort, dann bekommt er eigenen Hidden State
+
+
+* Isolated Word Recognitition
+  - Jedes Wort hat ein HMM(aij,bjk,pi)
+  - Jedes Wort wird trainiert (aij,bjk)
+  - pi = Wkeit des Hidden State wi
+  - unbekanntes Wort: Evaluation, welches HMM am Wahrscheinlichsten unbekanntes v
+emmitiert. Also: max( P(v, wenn aij,bjk gilt) )
+  - -> Hidden Markov Toolkit (HTK)
+
+
+* ein_
+  - 4 Hidden States
+  - aij: Matrix nicht ergodisch, wenn nur obere Dreiecksmatrix (für jedes A^n bleibt
+untere Hälfte =0)
+  - Beispiel Zeile 2 der 4x4 Matrix: 0  a22  a23  0
+    - Erste 0: es passiert bei dem Wort nicht, dass nach "i" wieder zurück auf "e"
+gewchselt wird
+    - a22: Wkeit, dass "i" langezogen wird: eiiiin_
+    - a23: Wkeit, dass nach "i" ein "n" kommt
+    - letztes 0: Wkeit, dass man das "n" bei "ein" vergisst
+
+Clustering
+==========
+
+1. Unsupervised Learning
+------------------------
+
+2. visual. hochdim. Daten
+-------------------------
+
+* PCA (Hauptachsentransf.) mit Euklidischer Metrik
+
+* Multidim. Scaling (MDS)
+  - Lösungsweg via Stress-Fktn
+    - Sammons Nonlinear Mapping
+      - start mit PCA
+      - gehe zu nächsten lok. Minimum entlang des stärksten Gradienten
+
+    - isoMDS von Kruskal
+
+  - MDS ist ein f(vek.x), so dass: d(vek.xi,vek.xj) ca = d( f(vek.xi),f(vek.xj) )
+
+
+3. Finden von Klassen
+---------------------
+
+* flach
+  - kmeans
+    - Fail: durchprobieren alle Möglichen K Teilmengen
+      - J(K) = Spur(SW)
+      - Minimum von J(K)
+      - leider NP-hart
+
+    - Isodata Algorithmus
+      - findet nur lokale Minima, könnte aber mit Monte Carlo Verfahren verbessert
+werden
+      - es müssen Start-Mittelpkte gewählt werden
+      - Mittelpkt-Vektor konvergiert
+      - Es werden immer wieder Teilmengen gebildet, wo enthaltene x näher an einem
+Mittelpkt sind, als an Mittelpunkten anderer Teilmengen
+      - Mittelpkte der Teilmengen werden nach jeder zusammenstellung von Teilmengen neu
+berechnet
+
+    - Wahl der Clusterzahl K bei d Dimensionen und n Samples
+      - a) Ellebogen: Stärkster Knick in J(K)-Kurve
+      - b) info.theor.Methode
+        - minimum von: -2 l(K) + a(n) * d*K
+        - l(K) = Maximum der log-Likelihood Funktion
+        - d*K = Anzahl Parameter des Modells
+        - a(n) = Strafmaß für Komplexität des theor. Models
+          - Bayesian Information Criterion (BIC) = ln(n)
+          - Akaike Information Criterion (AIC) = 2
+
+      - c) Calinski-Harabasz Index Maximieren: CH(K) = { Spur(SB)/(K-1) } / {
+Spur(SW)/(n-K) }
+
+  - graph-basiert: MinSpannTree
+    - Menge zerfällt in Teilmengen durch entfernen Inkonsistenter Kanten
+    - Kante e inkonsistent: kanntengewicht > mü.e + q* sigma.e
+    - q =1.96... ist Analogie zu 95% Konfidenzintervall
+    - mü.e und sigma.e : Wird aus Kanten berechnet, die max k Schritte von e Entfernt
+sind
+    - K muss hier nicht vorher festgelegt werden!
+
+
+* hierarchisch
+  - agglomerieren mit Dendrogram
+    - Zusammenlegen von x, die sich am nächsten sind
+    - cdist = Cluster-Distanz
+    - gewünschte Clusterzahl K: wenn n-K oft Daten/Cluster zusammengefasst wurden
+
+  - single/complete Link Clustering
+    - kürzester Abstand der Cluster wird aus kürzestem Abstand zwischen den Clustern
+genommen
+    - kürzester Abstand der Cluster wird aus WEITESTEM Abstand zwischen den Clustern
+genommen
+
+Fehlerabschätzung / Classifier Performance Estimation
+=====================================================
+
+1. Allgemein
+------------
+
+* Classifier: grossPhi(x) ordnet Feature X einer Class zu
+
+* Baysche/Optimale Fehlerrate: e_B =e ergibt sich, sollte Classifier immer die
+Wahrscheinlichste Klasse Wählen
+
+* Wahrsch. Klasse unbekannt, weil Wkeit-Verteilung in Praxis unbekannt
+
+* Fehlerrate e = E( F_grossPhi(x,w)
+
+* F_grossPhi(x,w) = 0 falls grossPhi(x) = w , sonst 1 (falsch klassifiziert)
+
+* tatsächliche/true Errorrate e_T
+  - will man abschätzen
+  - ist Maß, wie gut Trainingsdaten in der lage sind, Features zu klassifizieren
+  - expected Error Rate e_E: Mitteln über alle Trainingssets der größe n ergibt
+einen Erwartungswert für e_T
+
+
+2. Holdout Estimate
+-------------------
+
+* Heraushalten von Trainingssamples: ES GIBT TESTDATEN
+
+* bilden mehrerer Trainingssamples der größe m
+
+* eDach_T = 1/m * SummeAlleSamples( F_grossPhi(xi,wi) )
+
+
+3. Konfidenzniveau / Irrtumswkeit
+---------------------------------
+
+* Abweichung Schätzer und "true" soll unwarscheinlicher sein als Alpha
+
+* P( l p - pDach l >epsilon) <= alpha
+
+* "true" p liegt mit Wkeit (1-alpha) in Intervall pDach +- epsilon
+  - asym: Agresti-Coull
+  - asym: HPD
+
+
+* KLASSISCH: via Normalverteilung
+  - pDach = k/m
+  - epsilon = z_(1 - alpha/2) * sigma
+  - sigma² = 1/m * p(1-p)
+  - Trick: nutzte für p in sigma das pDach !
+  - Wegen Trick: sigma als Breite ist falsch!
+
+
+* AGRESTI-COULL KonfidenzIntervall
+  - bei alpha = 5%
+  - m und pDach werden durch "quantil" modifiziert
+  - m -> m+4
+  - p ist nicht mehr k/m sondern: (k+2)/(m+4)
+
+
+* Highest Posterior Density HPD
+  - ebenfalls Abschätzung von e_T
+  - Wkeit für error p hängt nicht nur von k sondern selbst von p ab
+  - a = k+1
+  - b = m-k +1
+  - Nutzung Beta-Verteilung Be(p,a,b)
+  - um mit alpha an p1,p2 zu kommen:
+  - Bestimmungsgleichungen lösen
+    - Be(p1,a,b) = Be(p2,a,b)
+    - p1.Integral.p2 Be(p,a,b) dp = 1-alpha
+
+
+4. ohne Testdaten
+-----------------
+
+* zu wenig manuell klassifizierte Daten?!
+
+* Nutzen aller Daten zum Training und/oder Testen
+
+* Resupstitution / Apperent Error Rate
+  - Trainingdaten = Testdaten
+  - zu optimistisch
+  - Entscheidungsgrenzen an Trainingsdaten angepasst
+  - GANZ ÜBEL bei kNN mit k=1: e_A=0
+
+
+* Cross-Validation (Leave-One-Out)
+  - allgemein ist k-fold: aus Trainingsdaten werden k Teilmengen gebildet
+  - k-fold: n=k -> In jeder Teilmenge wurde nur ein Wert weggelassen
+  - e_CV = Mittelwert aus allen Fehlklassifizierungen
+
+
+* Bootstrap Estimate
+  - Schätzung der Varianz des Schätzers
+  - Schätzung des Bias von e_A
+  - Algorithmus
+    - K-oft aus Trainingsdaten T n Samples ziehen mit zurücklegen -> Sk
+    - je Sk: trainiere Classifier
+    - je Sk: e_Ak bilden mit Sk+gebildeten Classifiere
+    - je Sk: e_Tk bilden mit Sk+Classifiere, der aus T gewonnen wurde
+    - je Sk: Bk = e_Tk - e_Ak
+    - eDach_boot = e_A + 1/K * SummeAlle Bk
+
+  - B = E(e_T - e_A)  <=> e_T = e_A + B
+
+
+* Andere Bootstrap-Methoden
+  - unterschied, wie Bias "gemittelt" wird
+  - Erfahrung: Linearkombination untersch. e_A
+  - unterschied, wie Trainingsdaten "gezogen" werden
+
+Wkeit-Dichte
+============
+
+1. nicht parametrische Dichteschätzung
+--------------------------------------
+
+* Suche Schätzer für p(x) ohne Annahme zur Verteilung. Also: kein Schätzer für
+Parameter von p(x)
+
+* 1. Idee
+  - Histogramm
+  - Anzahl Messungen in Intervall
+  - Bei Binominalverteilung: erw.treuer Schätzer für p in Intervall
+  - Probleme
+    - unstetig
+    - d Dimensionen: N^d Intervalle
+    - viele Zellen mögl. leer
+    - Lösungen
+      - unstetig? Kernel-Methoden
+      - Zu viele oder leere Zellen? variable Zellengröße
+
+
+* Kernel-Methoden
+  - keine willkürlichen Intervallgenzen
+  - Wkeit eines Messwerts wird aus Distanz innerhalb einer Fensterbreite rund um
+alle Messwerte ermittelt
+  - gleitendes Histogramm möglich: p an jedem Punkt x statt nur in einem Intervall
+  - mit n Messw. und K - positiv und auf 1 norm. - ist das auch für Dichte pDach(x)
+  - pDach(x) = 1/(n*h) SumAlle.n( K((x-xi)/h) )
+  - d-Dim: kugelsym. Kern mit (2pi)^(-d/2) * e^(-<x,x>/2)
+
+
+* Fensterbreite h
+  - Kernel: globales h
+    - MeanSquareError = Bias²(pDach(x)) + Var(pDach(x))
+    - Güte Schätzung über alle durch Integration: MISE(pDach)
+    - Tylorentw. von MISE mit pDach(x) in h: AMISE(h) Ableitung =0 für Minimum in h
+      - Bei NV: h = 0.79 * IQR * n^(-1/5)
+      - Bei NV, weil h sonst zu sehr geglättet: Silvermans Rule of Thumb
+      - h_srot = 0.9 * min{sigmaDach, IQR/1.35} * n^(-1/5)
+      - Plugin Methode: numerische Lösung von Minimum h aus AMISE'(h) = 0 mit h_srot als
+Startpunkt
+
+  - kNN-Methoden
+    - statt variabler Anz. Messwerte in festem h: feste Anzahl der Messwerte in var. h
+      - lokales h: Vermeidung, dass h bei hoher Wkeit zu klein, bzw niedrig zu klein
+      - statt h jetzt: V(x) = 2* (k-kleinster Abstand von x)
+
+    - Fehlerrate
+      - Erwartungswert der Fehlerrate asymptotisch Abschätzbar
+      - e* = Bayessche Fehlerrate
+      - Cover & Hart: blödster Fall k=1 aber n -> inf liefert: e* < E(e) < 2e*
+
+    - pDach(x) = k/(n*2*l x - xj l) leider keine Wkeit-Dichte!
+      - Integral +- inf ist nicht 1
+      - mit k-1 statt k lässt sich aber mit steigendem n zeigen, dass fDach_n(x) sich
+der WDichte in x nähert
+      - k(n) ist Nachbarzahl
+      - fDach_n(x) = (k(n) -1)/(n*V(x))
+      - Nicht so tragisch! Wir wollen x ja einer Klasse aus Trainingsdaten zuordnen
+        - für a posteriori Wkeit P(wi I x) reichts
+        - kNN-Entsch.Regel: x wird der Class zugeteilt, die unter den k-nächsten Nachb am
+häufigsten ist!
+        - gleich häufig: 1) zufällig, 2) am nächsten an x, 3) im Mittel am Nächsten
+
+    - Parameterwahl
+      - k nie größer als niedriegste "Klassenpopulation"
+      - Enas & Choi: k ca n^(2/8)
+      - für gutes k: Gütekriterien nutzen
+      - Wahl der METRIK: Was heißt "Nächster"? Ggf. Bewertung von Features untersch.
+
+    - Edit Trainingsdaten
+      - Ziele
+        - Veringern Fehlerrate
+        - Beschl. Klassifizierung
+
+      - Methoden
+        - Editing
+          - einzelne Ausreißer entfernen
+          - Ausreißer werden als fehlklassifiziert angesehen, sobald sie nicht mit dem Rest
+via kNN-Regel klassifizierbar sind
+
+        - Condensing
+          - entfernen von überflüssigen Samples
+          - Entferung darf bei restlichen Samples die "Decision Bounderies" nicht ändern
+          - Algorithm oft von Reihenfolge der Samples abh.
+          - Ab 3 Class: Minimierung in konsistente Teilmengen NP-vollst.
+
+        - Prototype-Generator
+
+
+2. Parameterschätzung (Annahme über WVerteilung)
+------------------------------------------------
+
+* Allgemein
+  - Annahme, wie Features verteilt sind
+  - Beispiel: schätze Mittelwert und Streuung
+
+
+* Maximum Likelihood Schätzer
+  - wie ist Parameter Theta zu wählen, so dass aus beob. Werte max. Wkeit haben
+  - Da jede Messung unabh.: Maximiere Produkt aus Wkeitverteilung je beobachteten
+Wert -> theta Dach
+  - Gradient(Nabla ∇) von Likelihood-Fkn = 0
+  - Vorsicht: Wendepkt? Rand von Theta?
+  - mit log-Likelihood-Fkn ergibt θ1,2 bei NV: Mittelwert und emp. Var.
+  - Mittelwert-Vektor und (nicht erw.treue) Kovar.Matr
+
+
+* erw. Treue Schätzer
+  - Erw.Wert des Schätzers sollte Parameter liefern
+  - BIAS: Abweichung Erwartungswert des empirischen Schätzers von theor. Schätzers
+  - SigmaDach = (1/(n-1)) * SummeAlle.k (vek.x_k - vek.muDach)*(vek.x_k -
+vek.muDach)^t
+
+
+* Bayes Classifier NV
+  - Nutzung emp. Kovarianz und Mittelwert
+  - naivesBayes(): Wkeit x wenn in wi ist Produkt der Wkeit je Feature, wenn Feature
+in wi (=Feature unabh.)
+  - Listing gausian.bayes(): Nutzung der Trainingsdaten für Wkeiten von x_k
+    - Aber: jede Klasse ist hier gleich-Wscheinlich
+    - a priori: aus Erfahrung bzw. Anfangs-Wkeiten
+
+  - Alternativ: Kerneldichte-Schätzer für Wkeiten nutzen: NICHT PARAMETRISCH!
+
+
+3. Quantil
+----------
+
+* IQR: Inter Quartile Range x_0.75 - x_0.25
+
+* x_0.25 ist der x-Wert, bei dem 25% der Messwerte xi kleiner sind
+
+* Quartil: 0.75 oberes, 0.5 mittleres (Median), 0.25 unteres
+
+Entscheidungstheorie
+====================
+
+1. Wkeit
+--------
+
+* bedingte
+
+* totale
+
+* Satz von Bayes
+
+* a priori
+
+* a posteriori
+
+
+2. Bayesche Entscheidungsregel
+------------------------------
+
+* stetige Featurewerte
+  - bedingte Wkeitdichte
+  - Dichte
+
+
+* Featurevektor
+
+
+3. Fehlerrate
+-------------
+
+* Formel
+
+* Bayessche
+
+
+4. Risiko-Minimierung
+---------------------
+
+* Wertung von Features
+
+* Entsch.Regel zur RM
+
+
+5. DiskriminantenFunktion
+-------------------------
+
+* Vorteile
+  - Vereinfachung Entscheidungsregel
+  - Konzept für diskr. Ansatz
+
+
+* Template Matching / Rocchio Klassifiz.
+
+* lineare
+
+
+6. mehrdim/multivariante NormVert.
+----------------------------------
+
+* Kovarianzmatrix
+  - Formel
+  - Aus Training: empirische Kov.
+
+
+* Wdichte
+
+* Varianz aller Features gleich: lin. DF ist Template-Matching.Idee: ln() nutzen
+und Konst. bzw von i unabh. Summanden verwerfen
+
+Markov-Ketten
+=============
+
+1. Stochastische Matrix
+-----------------------
+
+* Einträge im Intervall [0,1]
+
+* Summe der Zeileneinträge = 1
+
+* die i-te Zeile: Spalte j gibt Wkeit an, von i nach j zu wechseln
+
+
+2. Stochastischer Vek.
+----------------------
+
+* Summe der Einträge ist =1
+
+
+3. Wkeit pi(t) = P(wi(t)) = SummeAlleC( pj(t-1) * aji )
+-------------------------------------------------------
+
+* Also: wegen Unabhängigkeit ist es Summe Wkeit vorheriger Zustand *
+"Übergangs-Wkeit"
+
+* Iterativ: pi(t) lässt sich aus AnfangsWkeit vek.p(0)*A^t (a-Matrix t-mal
+angewand) berechnen
+
+* Statt pi(t) -> vek.p(t) STOCHASTISCHER VEKTOR
+
+* Statt aji -> A STOCH. MATRIX
+
+* vek.p(t) -> Zeilenvektor
+
+
+4. Übergangsmatrix
+------------------
+
+* allgemein könnte aij(t) gelten.
+
+* homogene/stationäre MK: aij nicht von t abhängig
+
+
+5. markovsche Eigenschaft
+-------------------------
+
+* Wkeit eines Zustands zum Zeitpunkt t hängt nur von Wkeit des Zustands w(t-1) ab
+
+* w älter als t-1 ist nicht relevant (Gedächnislosigkeit)
+
+* EINE Markov-Kette ist daher mit einer Übergangsmatrix komplett beschreibbar.
+Jeder Eintrag ist Wkeit für Zustandswechsel
+
+
+6. stochastischer Prozess
+-------------------------
+
+* Abfolge von Zuständen: ZUFÄLLIG, nicht von Zustandsfolge abhängig
+
+* zur Zeit t ist System in Zustand wi(t)
+
+* System muss zur Zeit t in einem Zustand sein: Summe über alle wi(t) = 1
+
+
+7. Allgemein
+------------
+
+* System durchläuft Class
+
+* Class = Zustand des Systems
+
+* zu diskr. Zeiten ändert sich (zufällig) Zustand (oder bleibt gleich)
+
+
+8. Langzeitverhalten
+--------------------
+
+* ist A strikt positiv, gilt:
+  - mit jeder vek.p(0) und t -> inf: p(0)*A^t -> p
+  - p hat dann Eigenschaft: p*A = p
+
+
+* nur ein A^k muss für ein k strikt Positiv sein: A ist ERGODISCH
+
+Rejection & Konfidenzmaße
+=========================
+
+1. Zurückweisen
+---------------
+
+2. Ambiguity Rejection
+----------------------
+
+* selbst die Class, wo Sample am ehesten zu passt, ist nicht sehr Wahrscheinlich
+
+* Sample liegt auch nahe einer anderen Class
+
+* oft, wenn mit einzelnen Feature nicht gut die Klassen unterscheidbar sind
+
+* Finden eines Konfidenzwerts für Feature
+  - fi(x) < f0 dann wird zurückgewiesen, wenn Schwellwert x0 nicht erfüllt
+  - Finden eines Schwellwerts: z.B. mit Leave-One-Out, bis Errorrate mit
+Trainingsdaten minimal ist
+
+
+* Chow's Reject Option
+  - geht davon aus, das a posteriori Wkeit P(wi,x) bekannt ist
+  - Fehlerrate immer e(t) <= t
+  - Reject nur, wenn t < 1- 1/C
+  - Satz von Chow
+    - Zusammenhang Threshold, Fehlerrate, Akzetanzrate
+    - x wird zurückgewiesen, wenn MAX.i(P(wi,x)) < 1 - t
+    - r(t) = Reject-Rate
+    - e(t) = 0.Integral.t r(s) ds - t * r(t)
+
+  - NAIV: optimales t wenn Accuracy A(t) maximal
+    - max bei t=0
+    - als Optim.Kriterium dumm
+    - t=0 -> alles wird zurückgewiesen
+
+  - OPTIMAL Reject Threshold: QUOTIENT aus Kosten für ein Reject und Kosten für ein
+Fehler
+
+
+3. Distance Rejection
+---------------------
+
+* Sample so weit von restlichen Trainingsdaten entfernt, dass vermutlich zu keiner
+Class passt
+
+* Novelty Detection: Ist Sample eine neue, eigene Class?
+
+* Nutzung einer Distanz ist wie ein "Konfidenzwert", aber hier sind es fiktive
+Kanten/Regionen statt "echte" Nachbarn
+  - g(x) = 1/k * SummeAlleNachbarnY d(x,y)
+
+
+* Bestimmung der empirischen Verteilung, wie Wahrscheinlich es ist, dass Sample
+den Abstand d zum Nachbar hat
+  - F(d) = P( g(x) <=d  )
+  - z.B. mit Trainingsdaten via LeaveOneOut
+  - Es lässt sich durchschnittliche max. Distanz d_max bestimmen
+  - 1 - F(d_max) <= epsilon
+  - epsilon = Anteil der Daten, die zurückgewisen werden
+  - epsilon weisst aber auch korrekte Daten zurück und bestimmt so False-Positive
+Rate
+
+
+4. A(t) = P(correct l accept)
+-----------------------------
+
+* = P(correct und accept) / P(accept)
+
+* = ( 1 -e(t) -r(t) ) / (1- r(t))
+
+Feature Selection & Extraction
+==============================
+
+1. Ziele
+--------
+
+* Verringerung Error Rate
+
+* Dimensonsreduzierung
+
+* Selection: Teilmenge nehmen
+
+* Extraction: Neukombination
+
+
+2. 1) Wrapper-Methoden
+----------------------
+
+* Classifier-Performance-Schätzer
+
+* z.B. Leave-One-Out
+
+* zu Aufwändig wegen Training (außer bei kNN)
+
+
+3. 2) Filter-Methoden: Maß unabh. von Classifier
+------------------------------------------------
+
+* gute Samples
+  - grosser Abstand between
+  - kleiner Abstand within
+
+
+* Ges. Maß für Güte der Class
+  - Mittelwert 2er Class
+  - Min 2er Class
+
+
+* Class-Separation via Abstandsmaß
+  - 1) theoretisch
+    - Chernoff Schranke beschränkt e_B nach oben
+    - Spezialfall: NV, und s = 0.5
+      - Bhattacharyya Distanz B als Abstandsmaß von w1 und w2
+      - e_CB = B * wurzel( P(w1) * P(w2) )
+      - für B muss man Mittelwerte und Kovarianzmatrizen aus Trainingsdaten schätzen
+
+  - 2) Training: Streumatrix
+    - S = n * Kdach = (n-1) * SigmaDach
+    - S zerlegen in Streuung between Class und innerhalb (within)
+    - SW = SumAlleClass[ ni * kDach.i ]
+    - SB = SumAlleClass[n.i * (mü.i - mü)(mü.i - mü)^t ]
+    - leider nur gut bei unimodal Verteilungen - stark um Mittelwert
+    - J1 = Spur(SB)/Spur(SW)
+    - J2 = Spur( SW^-1 * SB )
+
+
+4. Algorithmen zur Selection
+----------------------------
+
+* Ziel: Welche Teilmenge von f Features optimiert J?
+
+* Brute Force: 2^f
+
+* max d viele Features: O(f^d)
+
+* Skalar
+  - Idee: Performance nur in einem Feature Messen, und die Besten Features nehmen
+  - AUC der ROC-Kurve
+  - Fishers Discriminant Ratio
+    - gut, wenn man 2 Dim auf eine Abbilden will
+    - FDR = (mü1 - mü2)² / (sigma1² + sigma2²)
+
+  - obiges: nur für 2 Klassen. Trick: Vergleich via Mittelwerte oder Min der
+ermittelten J
+
+
+* Vektor
+  - Greedy
+    - Gefahr, im ersten Extremum hängen zu bleiben
+    - Seq Backward Sel.: Lasse immer mehr Features weg, jenachdem welches Weglassen
+die Güte am meisten erhöht
+    - Seq Forw. Selection: nehme immer mehr Features dazu
+
+  - Monte-Carlo Methoden
+    - springt gelegentlich auf Extrema heraus
+    - Features werden wie Chromosomen gemischt
+
+
+5. Extraction mit Principal Component Analysis (PCA)
+----------------------------------------------------
+
+* Hauptachsentransformation
+
+* Idee: Suche im Mehrdim. Featurespace Mittelpunkt und Projeziere Punkte auf
+Grade, die durch Mittelpkt geht.
+
+* Abstand der Punkte zu der Grade sollte um ganzen Minimal sein
+
+* Die Hauptachse einer Kovarianzmatrix ist in Richtung des Eigenvektors, der zum
+größten Eigenwert gehört. Die Daten Streuen entlang dieser Richtung am
+Stärksten!
+
+* Independent Component Analysis (ICA) nutzt diese Richtungen, um ohne Klasseninfo
+Richtung der Stärken Abweichung von NormalVerteilung zu finden. -> Ist es dann
+eine neue Klasse?
+
+
+6. Lineare Diskriminanten Analyse (LDA)
+---------------------------------------
+
+* im Gegensatz zu PCA: Nutzung von Klasseninfo! 2 Klassen sind Thema
+
+* J(vek.w) = FDR = abs(m1 - m2)² / (s1² + s2²)
+
+* mi = <vek.w, vek.mi>
+
+* mi = Schwerpkt Koordinaten, die auf vek.w projiziert sind
+
+* abs(m1-m2) = Abstand der Klassmittlpkt proj. auf vek.w
+
+* si² = emp. Var. der Class i längst vek.w
+
+* Gesucht w1 und w2 (vek.w)
+
+* vek.w ist in Richtung SW^-1 * (vek.m1 - vek.m2)
